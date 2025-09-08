@@ -6,6 +6,7 @@ import { delay } from "@/util/delay";
 import { Suspense } from "react";
 import BookItemSkeleton from "@/components/skeleton/book-item-skeleton";
 import BookListSkeleton from "@/components/skeleton/book-list-skeleton";
+import { notFound } from "next/navigation";
 
 // export const dynamic = "force-dynamic";
 // 특정 페이지의 유형을 강제로 Static, Dynamic 페이지로 설정
@@ -21,6 +22,9 @@ async function AllBooks() {
     { cache: "force-cache" }
   );
   if (!response.ok) {
+    if (response.status === 404) {
+      notFound();
+    }
     return <div>오류가 발생했습니다 ...</div>;
   }
 
@@ -41,6 +45,9 @@ async function RecoBooks() {
     { next: { revalidate: 3 } }
   );
   if (!response.ok) {
+    if (response.status === 404) {
+      notFound();
+    }
     return <div>오류가 발생했습니다...</div>;
   }
 

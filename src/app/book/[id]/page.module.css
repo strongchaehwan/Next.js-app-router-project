@@ -1,6 +1,12 @@
 .container {
   display: flex;
   flex-direction: column;
+  gap: 50px;
+}
+
+.container>section {
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 
@@ -26,7 +32,7 @@
   content: "";
 }
 
-.cover_img_container > img {
+.cover_img_container>img {
   z-index: 1;
   max-height: 350px;
   height: 100%;

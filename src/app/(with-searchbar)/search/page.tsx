@@ -2,6 +2,7 @@ import BookItem from "@/components/book-item";
 import BookListSkeleton from "@/components/skeleton/book-list-skeleton";
 import { BookData } from "@/types";
 import { delay } from "@/util/delay";
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 async function SearchResult({ q }: { q: string }) {
@@ -11,6 +12,9 @@ async function SearchResult({ q }: { q: string }) {
     { cache: "force-cache" }
   );
   if (!response.ok) {
+    if (response.status === 404) {
+      notFound();
+    }
     return <div>오류가 발생했습니다...</div>;
   }
 
