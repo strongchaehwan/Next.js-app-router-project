@@ -3,14 +3,17 @@ import { revalidatePath } from "next/cache";
 
 //지시자?
 
-export async function createReviewAction(formData: FormData) {
+export async function createReviewAction(_: any, formData: FormData) {
   const bookId = formData.get("bookId")?.toString();
   const content = formData.get("content")?.toString();
   const author = formData.get("author")?.toString();
   console.log(content, author);
 
   if (!bookId || !content || !author) {
-    return;
+    return {
+      status: false,
+      error: "리뷰 내용과 작성자를 입력해주세요",
+    };
   }
 
   try {
@@ -21,10 +24,19 @@ export async function createReviewAction(formData: FormData) {
         body: JSON.stringify({ bookId, content, author }),
       }
     );
-    console.log(response.status);
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
     revalidatePath(`/book/${bookId}`);
+
+    return {
+      status: true,
+      error: "",
+    };
   } catch (err) {
-    console.error(err);
-    return;
+    return {
+      status: false,
+      error: `리뷰 저장에 실패했습니다 : ${err}`,
+    };
   }
 }
