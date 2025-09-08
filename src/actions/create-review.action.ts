@@ -1,4 +1,7 @@
-"use server"; //지시자?
+"use server";
+import { revalidatePath } from "next/cache";
+
+//지시자?
 
 export async function createReviewAction(formData: FormData) {
   const bookId = formData.get("bookId")?.toString();
@@ -19,6 +22,7 @@ export async function createReviewAction(formData: FormData) {
       }
     );
     console.log(response.status);
+    revalidatePath(`/book/${bookId}`);
   } catch (err) {
     console.error(err);
     return;
