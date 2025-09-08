@@ -7,7 +7,6 @@ export async function createReviewAction(_: any, formData: FormData) {
   const bookId = formData.get("bookId")?.toString();
   const content = formData.get("content")?.toString();
   const author = formData.get("author")?.toString();
-  console.log(content, author);
 
   if (!bookId || !content || !author) {
     return {
@@ -24,9 +23,11 @@ export async function createReviewAction(_: any, formData: FormData) {
         body: JSON.stringify({ bookId, content, author }),
       }
     );
+
     if (!response.ok) {
       throw new Error(response.statusText);
     }
+
     revalidatePath(`/book/${bookId}`);
 
     return {
