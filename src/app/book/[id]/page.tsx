@@ -7,8 +7,20 @@ import Image from "next/image";
 import { Metadata } from "next";
 
 // export const dynamicParams = false;
-export function generateStaticParams() {
-  return [{ id: "1" }, { id: "2" }, { id: "3" }];
+export async function generateStaticParams() {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`
+  );
+
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+
+  const books: BookData[] = await response.json();
+
+  return books.map((book) => ({
+    id: book.id.toString(),
+  }));
 }
 
 async function BookDetail({ bookId }: { bookId: string }) {
@@ -79,14 +91,12 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata | null> {
   const { id } = await params;
-
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${id}`,
     {
       cache: "force-cache",
     }
   );
-
   if (!response.ok) {
     throw new Error(response.statusText);
   }
